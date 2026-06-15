@@ -18,3 +18,41 @@
 -- npx tsc --noEmit
 ### salida
 -- No existen errores
+
+## Testing
+
+### Ejecución de pruebas
+
+Las pruebas unitarias fueron implementadas utilizando Jest y ts-jest para validar el comportamiento de los middlewares `requestLogger` y `requireApiKey` sin necesidad de levantar el servidor.
+
+#### Comando de ejecución
+
+```bash
+npm test
+```
+
+#### Salida obtenida
+
+```text
+PASS  src/middlewares/auth.test.ts
+PASS  src/middlewares/logger.test.ts
+
+Test Suites: 2 passed, 2 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        0.507 s
+Ran all test suites.
+```
+
+#### Casos probados
+
+##### Middleware Logger (`requestLogger`)
+
+* Verifica que se invoque `next()` al recibir una petición.
+* Verifica que se registre el método y la ruta mediante el evento `finish`.
+
+##### Middleware API Key (`requireApiKey`)
+
+* Header `x-api-key` ausente → responde con código 401.
+* API key incorrecta → responde con código 401.
+* API key válida → invoca `next()` correctamente.
