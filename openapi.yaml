@@ -61,7 +61,7 @@ paths:
               estudianteId: "550e8400-e29b-41d4-a716-446655440000"
               materias: ["LTI_05A_458"]
               periodoId: "2026-1"
-              payment_method: "scholarship"
+              metodo_pago: "Credito"
       responses:
         '201':
           description: Inscripción creada.
@@ -95,9 +95,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/InscripcionV1'
         - type: object
-          required: [payment_method]
+          required: [metodo_pago]
           properties:
-            payment_method:
+            metodo_pago:
               type: string
-              enum: [debit, credit, scholarship]
+              enum: ['Efectivo', 'Transferencia', 'Debito', 'Credito']
       unevaluatedProperties: false
