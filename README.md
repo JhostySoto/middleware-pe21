@@ -56,3 +56,53 @@ Ran all test suites.
 * Header `x-api-key` ausente → responde con código 401.
 * API key incorrecta → responde con código 401.
 * API key válida → invoca `next()` correctamente.
+
+## Validación del contrato OpenAPI
+
+El archivo `openapi.yaml` fue validado con Redocly CLI antes de cada commit:
+
+```bash
+npx @redocly/cli lint openapi.yaml
+```
+
+**Resultado:**
+
+El único warning corresponde a la regla `no-server-example.com`, que advierte sobre el uso de `localhost` en `servers.url`. Es esperado en un entorno de desarrollo local y no representa un error de contrato.
+
+![Validación de openapi.yaml con Redocly CLI](docs/screenshots/validacionRedocly.png)
+
+## Versionado con Git Tags
+
+Se crearon dos tags para marcar las versiones del contrato:
+
+```bash
+git tag -a v1.0.0 -m "Contrato original: estudianteId, materias, periodoId"
+git tag -a v2.0.0 -m "BREAKING: payment_method requerido en v2"
+git push origin --tags
+```
+
+- **v1.0.0**: contrato original de `/v1/inscripciones`. Pide `estudianteId`, `materias` y `periodoId`. Si falta alguno, responde 400.
+- **v2.0.0**: agrega `payment_method` como campo obligatorio en `/v2/inscripciones` (valores permitidos: `debit`, `credit`, `scholarship`). Es un breaking change porque si un cliente manda el body de v1 sin ese campo, le devuelve 400. Por eso se hizo como ruta nueva y no se modificó `/v1/inscripciones`, así los que ya usaban v1 no se ven afectados.
+
+![Tags en GitHub](docs/screenshots/05-git-tags.png)
+
+README.md — sección Pruebas (Markdown):
+## Pruebas de los endpoints
+
+Servidor corriendo en `http://localhost:3000`. Autenticacion: header `x-api-key: secreto-demo`.
+
+### Escenario 1 — POST /v1/inscripciones con campos válidos (esperado: 201)
+
+![v1 201 Created](docs/screenshots/01-v1-201.png)
+
+### Escenario 2 — POST /v2/inscripciones con payment_method válido (esperado: 201)
+
+![v2 201 Created](docs/screenshots/02-v2-201.png)
+
+### Escenario 3 — POST /v2/inscripciones sin payment_method (esperado: 400)
+
+![v2 400 campo faltante](docs/screenshots/03-v2-400-faltante.png)
+
+### Escenario 4 — POST /v2/inscripciones con payment_method inválido (esperado: 400)
+
+![v2 400 valor inválido](docs/screenshots/04-v2-400-inválido.png)
