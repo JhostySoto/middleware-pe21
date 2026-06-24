@@ -106,3 +106,23 @@ Servidor corriendo en `http://localhost:3000`. Autenticacion: header `x-api-key:
 ### Escenario 4 — POST /v2/inscripciones con payment_method inválido (esperado: 400)
 
 ![v2 400 valor inválido](docs/screenshots/04-v2-400-inválido.png)
+
+### Validación del contrato OpenAPI
+
+Se ejecutó `npx @redocly/cli lint openapi.yaml` para validar el documento. 
+El resultado final no presenta errores ni warnings:
+
+![Validación Redocly sin errores](docs/screenshots/06-validacion-redocly-sin-errores.png)
+
+### Versionado
+
+El contrato se implementó con dos versiones activas: `/v1/inscripciones` y 
+`/v2/inscripciones`, donde v2 agrega el campo `metodo_pago`. Cada versión 
+está además marcada con un tag de Git (`v1.0.0`, `v2.0.0`), visibles en 
+el repositorio remoto:
+
+![Tags de Git](docs/screenshots/05-git-tags.png)
+
+### Reflexión
+
+Si otro equipo empezara a consumir esta API mañana, el primer cambio sería definir una política de versionado clara, ya que actualmente v1 y v2 coexisten sin indicar si v1 será deprecada. También se mejorarían los mensajes de error, que hoy son genéricos por ejemplo "campo requerido" o "método de pago inválido" y no especifican qué campo falló exactamente. Por último, se revisaría que la documentación refleje con precisión el comportamiento real de cada endpoint, ya que cualquier inconsistencia entre lo documentado y el código puede generar errores de integración para equipos que dependen únicamente del contrato.
