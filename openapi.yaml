@@ -7,8 +7,10 @@ info:
     identifier: "MIT"
 
 servers:
-  - url: http://localhost:3000
-    description: "Servidor local"
+  - url: https://api.uide-inscripciones.edu.ec ## Se lo tomo como una dirección de simulación
+    description: "Servidor de producción"
+  ## - url: http://localhost:3000
+  ##  description: "Servidor local"
 
 paths:
   /health:
